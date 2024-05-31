@@ -1,27 +1,13 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
-
-// const {onRequest} = require("firebase-functions/v2/https");
-
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
 
 const functions = require("firebase-functions");
 //const cors = require('cors')({origin: true});
 const cors = require('cors')({
-    origin: ['https://fakelife.ai', 'http://localhost:3000']
+    origin: ['https://fakelife.ai', 'http://35.189.32.20:8088/']
 });
 
 const logger = require("firebase-functions/logger");
 const queryData = require("./queryData");
-//const findRelationship = require("./relationship");
-//const findExcessive = require("./fetchOverview");
+
 const fetchData = require("./fetchOverview");
 const {ifClockwise, getLyhsLyeb, getDyhsDyeb} = require("./helper");
 const dysd = require("./daYun");
@@ -31,7 +17,6 @@ const handler = require("./openai");
 
 const run = require("./gemini");
 
-// TODO: Add user authentication to restrict access to this function
 
 exports.processLifeOverview = functions
     .region("australia-southeast1")
@@ -60,9 +45,7 @@ exports.processLifeOverview = functions
             try {
                 const result = await calculateLifeOverview(dob, time);
                 console.log(dob, time);
-                // const dataFinal =  await fetchResult(result);
-                // const runnn = await runn(result);
-                //console.log(result);
+
                 res.status(200).send({ result });
             } catch (error) {
                 logger.error("Error in calculateLifeOverview", error);
@@ -109,11 +92,8 @@ exports.processLifeOverview = functions
 async function calculateLifeOverview(dob, time) {
     try {
         const result = await fetchData(dob, time);
-
-        // Further process result if needed
         return result;
     } catch (error) {
-        // Handle or throw the error
         throw error;
     }
 }
@@ -151,15 +131,7 @@ async function calculateYearOverview(dob, tob, gender, year) {
     }
 }
 
-// async function fetchResult(event) {
-//     try {
-//         const requestBody = await handler(event);
-//         return requestBody;
-        
-//     } catch (error) {
-//         throw error;
-//     }
-// }
+
 
 async function runn(result) {
     try {
